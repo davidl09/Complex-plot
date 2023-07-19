@@ -4,6 +4,8 @@
 #include <array>
 #include <cassert>
 
+#include "expr_parsing_cpp/parsing.hpp"
+
 enum RGB_COLOURS{
     RED,
     GREEN,
