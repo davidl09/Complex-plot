@@ -4,7 +4,7 @@
 #include <array>
 #include <cassert>
 
-#include "expr_parsing_cpp/parsing.hpp"
+
 
 enum RGB_COLOURS{
     RED,
@@ -55,6 +55,11 @@ class _RGBpix{
         {
             return vals[colour];
         }
+        
+        const std::vector<uint8_t>& self_v()
+        {
+            return vals;
+        }
     
 };
 /*
@@ -95,7 +100,7 @@ class PPM_IMG
         {
             for(auto i = pixels.begin(); i != pixels.end(); i++)
             {
-                *i = colour;
+                *i = {distance(pixels.begin(), i) % 255,distance(pixels.begin(), i) % 255,distance(pixels.begin(), i) % 255};
             }
         }
 
@@ -104,7 +109,7 @@ class PPM_IMG
             std::ofstream output;
 
             output.open(filename + 
-                (filename.length() > 4 && filename.substr(filename.length() - 5, 4) == ".ppm" ? "" : ".ppm"),
+                (filename.length() > 4 && filename.substr(filename.length() - 4, 4) == ".ppm" ? "" : ".ppm"),
                 std::ios::out | std::ios::binary
             );
             assert(output.is_open());
@@ -113,7 +118,7 @@ class PPM_IMG
 
             for(auto i = pixels.begin(); i != pixels.end(); ++i)
             {
-                output.write((const char *)(&(i[0])), 3);
+                output.write(&(*(i->self_v().begin())), 3);
             }
 
             output.close();
