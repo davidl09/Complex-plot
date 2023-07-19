@@ -15,6 +15,12 @@ class _RGBpix{
     std::vector<uint8_t> vals; //red, green, blue
 
     public:
+
+        _RGBpix()
+        {
+            vals = {0, 0, 0};
+        }
+
         _RGBpix(uint8_t red, uint8_t green, uint8_t blue)
         {
             vals.resize(3);
@@ -71,7 +77,7 @@ class PPM_IMG
         const std::string ppm_header;
 
     public:
-        constexpr PPM_IMG(unsigned int height, unsigned int width) : 
+        PPM_IMG(unsigned int height, unsigned int width) : 
         width(width), height(height), 
         ppm_header("P6 " + std::to_string(width) + " " + std::to_string(height) + " " + "255\n")
         {
@@ -105,11 +111,10 @@ class PPM_IMG
 
             for(auto i = pixels.begin(); i != pixels.end(); ++i)
             {
-                for(int c = RED; c <= BLUE; ++c)
-                {
-                    output.write((const char*)&(*i) + c, 1);
-                }
+                output.write((const char *)(&(i[0])), 3);
             }
+
+            output.close();
 
         }
 };
