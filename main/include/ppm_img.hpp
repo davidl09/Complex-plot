@@ -1,3 +1,6 @@
+#ifndef PPM_IMG_HPP
+#define PPM_IMG_HPP
+
 #include <fstream>
 #include <ios>
 #include <vector>
@@ -36,6 +39,14 @@ class _RGBpix{
             vals = arr;
         }
 
+        _RGBpix(unsigned char arr[3])
+        {
+            for(int i = 0; i < 3; i++)
+            {
+                vals[i] = arr[i];
+            }
+        }
+
         void set_val(std::vector<uint8_t>& new_vals)
         {
             vals = new_vals;
@@ -44,6 +55,16 @@ class _RGBpix{
         void set_val(std::vector<uint8_t>&& new_vals)
         {
             vals = new_vals;
+        }
+
+        void set_val(unsigned char value, RGB_COLOURS colour)
+        {
+            vals[colour] = value;
+        }
+
+        void set_val(unsigned char& value, RGB_COLOURS& colour)
+        {
+            vals[colour] = value;
         }
 
         uint8_t& val(RGB_COLOURS col) //returns read-write ref to any colour
@@ -100,7 +121,7 @@ class PPM_IMG
         {
             for(auto i = pixels.begin(); i != pixels.end(); i++)
             {
-                *i = {distance(pixels.begin(), i) % 255,distance(pixels.begin(), i) % 255,distance(pixels.begin(), i) % 255};
+                *i = colour;
             }
         }
 
@@ -118,10 +139,13 @@ class PPM_IMG
 
             for(auto i = pixels.begin(); i != pixels.end(); ++i)
             {
-                output.write(&(*(i->self_v().begin())), 3);
+                output.write((const char *)&(*(i->self_v().begin())), 3);
             }
 
             output.close();
 
         }
 };
+
+
+#endif
