@@ -3,5 +3,5 @@ project(cmplx-plot-1.0)
 
 set(CXX_STANDARD 20)
 
-add_compile_options(-g -O0 -std=c++20 -fpermissive)
+add_compile_options(-g -Ofast -std=c++20)
 add_subdirectory(main)

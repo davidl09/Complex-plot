@@ -6,6 +6,7 @@
 #include <vector>
 #include <array>
 #include <cassert>
+#include <complex>
 
 
 
@@ -72,7 +73,7 @@ class _RGBpix{
             return vals[col];
         }
 
-        uint8_t& operator[](RGB_COLOURS colour)
+        uint8_t& operator[](int colour)
         {
             return vals[colour];
         }
@@ -81,6 +82,8 @@ class _RGBpix{
         {
             return vals;
         }
+
+        
     
 };
 /*
@@ -112,9 +115,9 @@ class PPM_IMG
             pixels.resize(width * height);
         }
 
-        _RGBpix& at(int _x, int _y) //returns read write ref. to any pixel
+        _RGBpix& at_pos(int i, int j) //returns read write ref. to any pixel
         {
-            return pixels[_y * width + _x];
+            return pixels[i * width + j];
         }
 
         void set_all(_RGBpix colour)
@@ -122,6 +125,25 @@ class PPM_IMG
             for(auto i = pixels.begin(); i != pixels.end(); i++)
             {
                 *i = colour;
+            }
+        }
+
+        template <typename T>
+        void set_colour_cmplx(int i, int j, std::complex<T> num)
+        {
+            assert(i >= 0 && i < height && j >= 0 && j < height);
+            cmplx_to_colour<double>(at_pos(i, j), num);
+        }
+
+        template<typename T>
+        void plot_cmplx_func(Parsing::Expression<T>& expr, double pixel_per_int)
+        {
+            for(int i = 0; i < 1000; ++i)
+            {
+                for(int j = 0; j < 1000; ++j)
+                {
+                    set_colour_cmplx<double>(i, j, expr.evaluate({{'z', {(j - 500)/pixel_per_int, (-i + 500)/pixel_per_int}}}));
+                }
             }
         }
 
