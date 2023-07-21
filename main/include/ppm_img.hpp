@@ -148,7 +148,7 @@ class PPM_IMG
                     x = j - width / 2;
                     y = -i + height / 2;
 
-                    if(grid && (i - std::floor(i) < 0.05 || j - std::floor(j) < 0.05)) 
+                    if(grid && (std::abs((y / pixel_per_int) - std::floor((y / pixel_per_int))) < 0.005 || std::abs((x / pixel_per_int) - std::floor((x / pixel_per_int))) < 0.005)) 
                         at_pos(i, j) = {30, 30, 30};
                     else 
                         set_colour_cmplx<double>(i, j, expr.evaluate({{'z', {x / pixel_per_int, y / pixel_per_int}}}));
