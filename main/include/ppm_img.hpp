@@ -136,13 +136,22 @@ class PPM_IMG
         }
 
         template<typename T>
-        void plot_cmplx_func(Parsing::Expression<T>& expr, double pixel_per_int)
+        void plot_cmplx_func(Parsing::Expression<T>& expr, int maxval, bool grid)
         {
-            for(int i = 0; i < 1000; ++i)
+            double pixel_per_int = std::min(height, width) / (2 * maxval);
+            int x, y;
+            
+            for(int i = 0; i < height; ++i)
             {
-                for(int j = 0; j < 1000; ++j)
+                for(int j = 0; j < width; ++j)
                 {
-                    set_colour_cmplx<double>(i, j, expr.evaluate({{'z', {(j - 500)/pixel_per_int, (-i + 500)/pixel_per_int}}}));
+                    x = j - width / 2;
+                    y = -i + height / 2;
+
+                    if(grid && (i - std::floor(i) < 0.05 || j - std::floor(j) < 0.05)) 
+                        at_pos(i, j) = {30, 30, 30};
+                    else 
+                        set_colour_cmplx<double>(i, j, expr.evaluate({{'z', {x / pixel_per_int, y / pixel_per_int}}}));
                 }
             }
         }
