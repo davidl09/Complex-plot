@@ -104,7 +104,7 @@ class PPM_IMG
 {
     private:
         std::vector<_RGBpix> pixels;
-        const unsigned int width, height;
+        const int width, height;
         const std::string ppm_header;
 
     public:
@@ -132,30 +132,53 @@ class PPM_IMG
         void set_colour_cmplx(int i, int j, std::complex<T> num)
         {
             assert(i >= 0 && i < height && j >= 0 && j < height);
+            if(std::abs(num) == INFINITY) at_pos(i, j) = {255,255,255};
             cmplx_to_colour<double>(at_pos(i, j), num);
         }
 
         template<typename T>
         void plot_cmplx_func(Parsing::Expression<T>& expr, int maxval, bool grid)
         {
-            double pixel_per_int = std::min(height, width) / (2 * maxval);
-            int x, y;
+            double pixel_per_int = std::min(height, width) / (2.0 * maxval);
+            double x, y;
+            
             
             for(int i = 0; i < height; ++i)
             {
                 for(int j = 0; j < width; ++j)
                 {
-                    x = j - width / 2;
-                    y = -i + height / 2;
+                    x = (j - width / 2) / pixel_per_int;
+                    y = (-i + height / 2) / pixel_per_int;
 
-                    if(grid && (std::abs((y / pixel_per_int) - std::floor((y / pixel_per_int))) < 0.005 || std::abs((x / pixel_per_int) - std::floor((x / pixel_per_int))) < 0.005)) 
+                    if(grid && (std::abs(y - std::floor(y)) < 0.002 || std::abs(x - std::floor(x)) < 0.002)) 
                         at_pos(i, j) = {30, 30, 30};
                     else 
-                        set_colour_cmplx<double>(i, j, expr.evaluate({{'z', {x / pixel_per_int, y / pixel_per_int}}}));
+                        set_colour_cmplx<double>(i, j, expr.evaluate({{'z', {x, y}}}));
                 }
             }
         }
+/*
+        template <typename T>
+        friend void plot_cmplx_func(_RGBpix* sector_start, Parsing::Expression<T>& expr, int maxval, bool grid, int start_x, int end_x)
+        {
+            double pixel_per_int = std::min(img.height, img.width) / (2 * maxval);
+            int x, y;
+            
+            for(int i = 0; i < img.height; ++i)
+            {
+                for(int j = 0; j < img.width; ++j)
+                {
+                    x = (j - img.width / 2) / pixel_per_int;
+                    y = (-i + img.height / 2) / pixel_per_int;
 
+                    if(grid && (std::abs((y) - std::floor(y)) < 0.005 || std::abs((x) - std::floor(x)) < 0.005)) 
+                        img.at_pos(i, j) = {30, 30, 30};
+                    else 
+                        set_colour_cmplx<double>(i, j, expr.evaluate({{'z', {x, y}}}));
+                }
+            }
+        }
+*/
         void save(std::string filename)
         {
             std::ofstream output;
