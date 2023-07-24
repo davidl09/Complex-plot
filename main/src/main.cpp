@@ -8,8 +8,20 @@ int main(){
 	while(true)
 	{
 		
-		std::cout << "Enter a function of z to generate its complex plot.\nUse a lowercase 'i' to represent the imaginary unit.\n";
+		std::cout << "Enter a function of z to generate its complex plot.\n" 
+					<< "Use a lowercase 'i' to represent the imaginary unit.\n"
+					<< "Type 'f' to see a list of available functions and operators.\n";
+
 		std::getline(std::cin, expr);
+		if(expr == "f")
+		{
+			std::cout << "\n\nAvailable functions:\n";
+			for(auto& s : Parsing::operators)
+				std::cout << s << "\n";
+			
+			std::cout << "\n\n";
+			continue;
+		}
 
 		Parsing::Expression<std::complex<double>> func(expr);
 		try
