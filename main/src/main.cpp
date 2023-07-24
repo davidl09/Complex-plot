@@ -3,7 +3,6 @@
 #include "complex_colour.hpp"
 
 int main(){
-	
 	std::string expr, grid, name, input;
 	bool grid_show = false;
 	while(true)
@@ -51,7 +50,7 @@ int main(){
 		std::cout << "Done plotting, enter a name for the generated image file\n";
 		std::cin >> name;
 		std::cout << "Saving file...\n";
-		new_image.save(name);
+		new_image.save_jpg(name);
 		std::cout << "Done! Press q to exit, or any other key to generate another plot\n";
 		std::cin >> input;
 		if(input == "q") exit(0);

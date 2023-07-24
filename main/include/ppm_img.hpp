@@ -8,7 +8,9 @@
 #include <cassert>
 #include <complex>
 
+#include "toojpeg.h"
 
+FILE* jpeg_out;
 
 enum RGB_COLOURS{
     RED,
@@ -179,25 +181,30 @@ class PPM_IMG
             }
         }
 */
-        void save(std::string filename)
+
+        void save_jpg(std::string filename)
         {
-            std::ofstream output;
+            filename += (filename.length() > 4 && filename.substr(filename.length() - 4, 4) == ".jpg" ? "" : ".jpg");
 
-            output.open(filename + 
-                (filename.length() > 4 && filename.substr(filename.length() - 4, 4) == ".ppm" ? "" : ".ppm"),
-                std::ios::out | std::ios::binary
-            );
-            assert(output.is_open());
+            jpeg_out = fopen(filename.c_str(), "wb");
 
-            output.write(ppm_header.c_str(), ppm_header.size());
+            //temporary due to issues with _RGBpix obj and jpeg storage
+            unsigned char* temp_pix = new unsigned char[width * height * 3];
 
-            for(auto i = pixels.begin(); i != pixels.end(); ++i)
+            //temporary, need better copy method
+            for(int i = 0; i < width * height * 3; ++i)
             {
-                output.write((const char *)&(*(i->self_v().begin())), 3);
+                temp_pix[i] = pixels[i/3][i%3];
             }
 
-            output.close();
+            TooJpeg::writeJpeg
+            (
+                [](unsigned char byte){fputc(byte, jpeg_out);},
+                temp_pix, width, height, true, 100, false, NULL
+            );
 
+            fclose(jpeg_out);
+            delete[] temp_pix;
         }
 };
 
