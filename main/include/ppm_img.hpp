@@ -118,6 +118,16 @@ class PPM_IMG
             pixels.resize(width * height);
         }
 
+        constexpr int get_height()
+        {
+            return height;
+        }
+
+        constexpr int get_width()
+        {
+            return width;
+        }
+
         _RGBpix& at_pos(int i, int j) //returns read write ref. to any pixel
         {
             return pixels[i * width + j];
@@ -138,77 +148,62 @@ class PPM_IMG
             if(std::abs(num) == INFINITY) at_pos(i, j) = {255,255,255};
             cmplx_to_colour<double>(at_pos(i, j), num);
         }
-/*
-        template<typename T> //finished and working, single threaded version
-        void plot_cmplx_func(Parsing::Expression<std::complex<T>>& expr, int maxval, bool grid)
-        {
-            double pixel_per_int = std::min(height, width) / (2.0 * maxval);
-            T x, y;
-            
-            for(int i = 0; i < height; ++i)
-            {
-                for(int j = 0; j < width; ++j)
-                {
-                    x = (j - width / 2) / pixel_per_int;
-                    y = (-i + height / 2) / pixel_per_int;
 
-                    if(grid && (std::abs(y - std::floor(y)) < 0.002 || std::abs(x - std::floor(x)) < 0.002)) 
-                        at_pos(i, j) = {30, 30, 30};
-                    else 
-                        set_colour_cmplx<T>(i, j, expr.evaluate({{'z', {x, y}}}));
-                }
-            }
-        }
-*/
         template<typename T>
         void plot_cmplx_func_sector //plot a function over a specified sector of a PPM_IMG bitmap
-        (int start_row, int end_row, Parsing::Expression<std::complex<T>>& expr, int maxval, bool grid)
+        (Parsing::Expression<std::complex<T>>& expr, int start_row, int num_rows, int maxval, bool grid)
         {
-            //std::cout << "Start, end:\n" << start_row << "\n" << end_row << "\n";
-            assert(start_row >= 0);
-            assert(end_row <= pixels.size() / width);
+            
             T x, y;
             double pixel_per_int = std::min(height, width) / (2.0 * maxval);
 
-            for(; start_row != end_row; start_row++)
+            for(int row = 0; row < num_rows && row + start_row < height; row++)
             {
+            
                 for(int j = 0; j < width; j++)
                 {
                     x = (j - width / 2) / pixel_per_int;
-                    y = (-start_row + height / 2) / pixel_per_int;
+                    y = (-(row + start_row) + height / 2) / pixel_per_int;
 
                     if(grid && maxval <= 50 && (std::abs(y - std::floor(y)) < 0.002 || std::abs(x - std::floor(x)) < 0.002)) 
-                        at_pos(start_row, j) = {30, 30, 30};
+                        at_pos(row + start_row, j) = {30, 30, 30};
                     else 
-                        set_colour_cmplx<T>(start_row, j, expr.evaluate({{'z', {x, y}}}));
+                        set_colour_cmplx<T>(row + start_row, j, expr.evaluate({{'z', {x, y}}}));
                 }
             }
         }
         
         template<typename T>
-        void plot_cmplx_func_m(Parsing::Expression<std::complex<T>>& expr, int maxval, bool grid, unsigned int nthreads)
+        void plot_cmplx_func_m(Parsing::Expression<std::complex<T>>& expr, int maxval, bool grid, unsigned int nthreads = 8)
         {
-            nthreads = std::min(nthreads, std::thread::hardware_concurrency()); //no more threads than available processors
-            auto rows_per_thread = height / nthreads; //size of each horizontal slice
-            std::cout << "nthreads: " << nthreads << "\n";
+            nthreads = (int)std::min(nthreads, std::thread::hardware_concurrency()); //no more threads than available processors
+            int rows_per_thread = height / nthreads; //size of each horizontal slice
+
+            //std::cout << "nthreads: " << nthreads << "\n";
             std::vector<std::thread> threads;
             threads.reserve(nthreads + 1); 
             
-            for(int row = 0; row < height; row += rows_per_thread)
+            for(int row = 0; row < height - height % rows_per_thread; row += rows_per_thread)
             {
-                std::cout << "Row: " << row << "\n";
-                threads.push_back(std::thread([&](){this->plot_cmplx_func_sector(row, row + rows_per_thread, expr, maxval, grid);}));
+                threads.push_back(
+                    std::thread(
+                        [&](){this->plot_cmplx_func_sector(expr, row, rows_per_thread, maxval, grid);}
+                    )
+                );
             }
+            assert(threads.size() == nthreads);
 
-            if(height % nthreads != 0)
+            if(height % nthreads)
             {
-                threads.push_back(std::thread([&](){this->plot_cmplx_func_sector(nthreads * rows_per_thread, height, expr, maxval, grid);}));
+                threads.push_back(
+                    std::thread(
+                        [&](){this->plot_cmplx_func_sector(expr, height - height % nthreads, height % nthreads, maxval, grid);}
+                    )
+                );
             }
-
+            
             for(auto& t : threads)
                 t.join();
-
-            return;
         }
 
         void save_jpg(std::string filename)

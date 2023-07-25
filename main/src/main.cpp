@@ -59,7 +59,8 @@ int main(){
 		std::cout << "Plotting, please wait a few seconds...\n";
 
 		PPM_IMG new_image(size, size);
-		new_image.plot_cmplx_func_m<double>(func, range, grid_show, 16);
+		new_image.plot_cmplx_func_sector(func, 0, new_image.get_height(), range, grid_show);
+		//new_image.plot_cmplx_func_m<double>(func, range, grid_show);
 		
 		std::cout << "Done plotting, enter a name for the generated image file\n";
 		std::cin >> name;
