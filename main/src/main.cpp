@@ -17,7 +17,7 @@ int main(){
 		{
 			std::cout << "\n\nAvailable functions:\n";
 			for(auto& s : Parsing::operators)
-				std::cout << s << "\n";
+				std::cout << s << (s.size() > 1 ? "z)" : "") << "\n";
 			
 			std::cout << "\n\n";
 			continue;
@@ -57,7 +57,7 @@ int main(){
 		std::cout << "Plotting, please wait a few seconds...\n";
 
 		PPM_IMG new_image(size, size);
-		new_image.plot_cmplx_func(func, range, grid_show);
+		new_image.plot_cmplx_func_m<double>(func, range, grid_show, 16);
 		
 		std::cout << "Done plotting, enter a name for the generated image file\n";
 		std::cin >> name;
