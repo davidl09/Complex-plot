@@ -164,9 +164,9 @@ class PPM_IMG
         void plot_cmplx_func_sector //plot a function over a specified sector of a PPM_IMG bitmap
         (int start_row, int end_row, Parsing::Expression<std::complex<T>>& expr, int maxval, bool grid)
         {
+            //std::cout << "Start, end:\n" << start_row << "\n" << end_row << "\n";
             assert(start_row >= 0);
-            assert(start_row > end_row);
-            assert(end_row < pixels.size() / width);
+            assert(end_row <= pixels.size() / width);
             T x, y;
             double pixel_per_int = std::min(height, width) / (2.0 * maxval);
 
@@ -188,18 +188,19 @@ class PPM_IMG
         template<typename T>
         void plot_cmplx_func_m(Parsing::Expression<std::complex<T>>& expr, int maxval, bool grid, unsigned int nthreads)
         {
-            nthreads = std::min(nthreads, std::thread::hardware_concurrency());
-            auto rows_per_thread = height / nthreads;
-            
+            nthreads = std::min(nthreads, std::thread::hardware_concurrency()); //no more threads than available processors
+            auto rows_per_thread = height / nthreads; //size of each horizontal slice
+            std::cout << "nthreads: " << nthreads << "\n";
             std::vector<std::thread> threads;
-            threads.reserve(nthreads + 1);
+            threads.reserve(nthreads + 1); 
             
             for(int row = 0; row < height; row += rows_per_thread)
             {
+                std::cout << "Row: " << row << "\n";
                 threads.push_back(std::thread([&](){this->plot_cmplx_func_sector(row, row + rows_per_thread, expr, maxval, grid);}));
             }
 
-            if(height % nthreads)
+            if(height % nthreads != 0)
             {
                 threads.push_back(std::thread([&](){this->plot_cmplx_func_sector(nthreads * rows_per_thread, height, expr, maxval, grid);}));
             }

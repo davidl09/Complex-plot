@@ -3,7 +3,7 @@
 #include "complex_colour.hpp"
 
 int main(){
-	std::string expr, grid, name, input;
+	std::string expr, grid, name, input, temp;
 	bool grid_show = false;
 	while(true)
 	{
@@ -15,9 +15,9 @@ int main(){
 		std::getline(std::cin, expr);
 		if(expr == "f")
 		{
-			std::cout << "\n\nAvailable functions:\n";
+			std::cout << "\n\nAvailable functions/operators:\n";
 			for(auto& s : Parsing::operators)
-				std::cout << s << (s.size() > 1 ? "z)" : "") << "\n";
+				std::cout << s << (s.size() > 1 ? "z)\n" : (s == "^" ? "\n" : " "));
 			
 			std::cout << "\n\n";
 			continue;
@@ -38,14 +38,16 @@ int main(){
 		while(true)
 		{
 			std::cout << "Enter the range to be plotted, for example '10' will plot [[-10, 10], [-10i, 10i]]\n";
-			std::cin >> range;
+			std::cin >> temp;
+			range = std::stoi(temp);
 			if(range < 1 || range > 1000000) std::cout << "Invalid range value, please try again\n";
 			else break;
 		}
 		while(true)
 		{
 			std::cout << "Enter the size of the image in pixels, for example 400 generates a 160,000 pixel image. Max of 5000x5000 px\n";
-			std::cin >> size;
+			std::cin >> temp;
+			size = std::stod(temp);
 			if(size < 0 || size > 5000) std::cout << "Image size too large or not valid, try again\n";
 			else break;
 		}
