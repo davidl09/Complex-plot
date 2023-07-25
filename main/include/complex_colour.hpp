@@ -5,6 +5,10 @@
 #include <complex>
 #include "ppm_img.hpp"
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 template <typename T>
 static void cmplx_to_colour(_RGBpix& pix, std::complex<T> num)
 {
