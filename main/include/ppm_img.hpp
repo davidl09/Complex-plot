@@ -174,12 +174,12 @@ class PPM_IMG
         }
         
         template<typename T>
-        void plot_cmplx_func_m(Parsing::Expression<std::complex<T>>& expr, int maxval, bool grid, unsigned int nthreads = 8)
+        void plot_cmplx_func_m(Parsing::Expression<std::complex<T>>& expr, int maxval, bool grid, unsigned int nthreads = 16)
         {
             nthreads = (int)std::min(nthreads, std::thread::hardware_concurrency()); //no more threads than available processors
             int rows_per_thread = height / nthreads; //size of each horizontal slice
 
-            std::cout << "Using " << nthreads << " threads\n";
+            std::cout << "Using " << nthreads << " threads...\n";
             std::vector<std::thread> threads;
             threads.reserve(nthreads + 1); 
 

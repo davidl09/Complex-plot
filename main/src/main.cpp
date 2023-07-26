@@ -45,7 +45,7 @@ int main(){
 		}
 		while(true)
 		{
-			std::cout << "Enter the size of the image in pixels, for example 400 generates a 160,000 pixel image. Max of 5000x5000 px\n";
+			std::cout << "Enter the size of the image in pixels, for example 400 generates a 160,000 pixel image. Max of 8000x8000 px\n";
 			std::cin >> temp;
 			size = std::stod(temp);
 			if(size < 50 || size > 8 * 1000) std::cout << "Image size too large or not valid, try again\n";
@@ -58,6 +58,7 @@ int main(){
 		if(grid == "g") grid_show = true;
 		std::cout << "Plotting, please wait a few seconds...\n";
 
+		
 		PPM_IMG new_image(size, size);
 		//new_image.plot_cmplx_func_sector(func, 0, new_image.get_height(), range, grid_show);
 		new_image.plot_cmplx_func_m<double>(func, range, grid_show);
