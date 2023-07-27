@@ -58,10 +58,6 @@ int main(){
 		if(grid == "g") grid_show = true;
 		std::cout << "Plotting, please wait a few seconds...\n";
 
-<<<<<<< HEAD
-		
-=======
->>>>>>> a135954 (n/a)
 		RGB_BitMap *new_image;
 		try{
 			new_image = new RGB_BitMap(size, size);
@@ -71,11 +67,7 @@ int main(){
 			std::cout << "Insufficient memory, please use a smaller image format\n";
 			continue;
 		}
-<<<<<<< HEAD
-
-=======
 		
->>>>>>> a135954 (n/a)
 		//new_image.plot_cmplx_func_sector(func, 0, new_image.get_height(), range, grid_show);
 		new_image->plot_cmplx_func_m(func, range, grid_show, 2);
 		
