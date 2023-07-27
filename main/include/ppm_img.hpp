@@ -103,19 +103,22 @@ Each pixel is a triplet of red, green, and blue samples, in that order.
 Each sample is represented in pure binary by either 1 or 2 bytes. If the Maxval is less than 256, it is 1 byte. 
 Otherwise, it is 2 bytes. The most significant byte is first.
 */
-class PPM_IMG
+class RGB_BitMap
 {
     private:
-        std::vector<_RGBpix> pixels;
+        _RGBpix* pixels;
         const int width, height;
-        const std::string ppm_header;
 
     public:
-        PPM_IMG(unsigned int height, unsigned int width) : 
-        width(width), height(height), 
-        ppm_header("P6 " + std::to_string(width) + " " + std::to_string(height) + " " + "255\n")
+        RGB_BitMap(unsigned int height, unsigned int width) : 
+        width(width), height(height)
         {
-            pixels.resize(width * height);
+            pixels = new _RGBpix[width * height];
+        }
+
+        ~RGB_BitMap()
+        {
+            delete[] pixels;
         }
 
         constexpr int get_height()
@@ -135,9 +138,9 @@ class PPM_IMG
 
         void set_all(_RGBpix colour)
         {
-            for(auto i = pixels.begin(); i != pixels.end(); i++)
+            for(auto i = 0; i < width * height; i++)
             {
-                *i = colour;
+                pixels[i] = colour;
             }
         }
 
@@ -146,7 +149,7 @@ class PPM_IMG
         {
             assert(i >= 0 && i < height && j >= 0 && j < height);
             if(std::abs(num) == INFINITY) at_pos(i, j) = {255,255,255};
-            cmplx_to_colour<double>(at_pos(i, j), num);
+            cmplx_to_colour<T>(at_pos(i, j), num);
         }
 
         template<typename T>

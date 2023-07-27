@@ -23,7 +23,7 @@ int main(){
 			continue;
 		}
 
-		Parsing::Expression<std::complex<double>> func(expr);
+		Parsing::Expression<std::complex<long double>> func(expr);
 		try
 		{
 			func.evaluate({{'z', {0, 0}}});
@@ -45,32 +45,45 @@ int main(){
 		}
 		while(true)
 		{
-			std::cout << "Enter the size of the image in pixels, for example 400 generates a 160,000 pixel image. Max of 8000x8000 px\n";
+			std::cout << "Enter the size of the image in pixels. \nFor example, 400 generates a 160,000 (400x400) pixel image. Max of 8000x8000 px\n";
 			std::cin >> temp;
 			size = std::stod(temp);
 			if(size < 50 || size > 8 * 1000) std::cout << "Image size too large or not valid, try again\n";
 			else break;
 		}
 
-		std::cout << "Press g to overlay a grid, or any other key followed by 'ENTER' to use default settings\n";
+		std::cout << "Press g to overlay a unit grid (not recommended for plot scale > 30), or any other key followed by 'ENTER' to use default settings\n";
 		std::cin >> grid;
 
 		if(grid == "g") grid_show = true;
 		std::cout << "Plotting, please wait a few seconds...\n";
 
 		
-		PPM_IMG new_image(size, size);
+		RGB_BitMap *new_image;
+		try{
+			new_image = new RGB_BitMap(size, size);
+		}
+		catch(...)
+		{
+			std::cout << "Insufficient memory, please use a smaller image format\n";
+			continue;
+		}
+
 		//new_image.plot_cmplx_func_sector(func, 0, new_image.get_height(), range, grid_show);
-		new_image.plot_cmplx_func_m<double>(func, range, grid_show);
+		new_image->plot_cmplx_func_m(func, range, grid_show, 2);
 		
 		std::cout << "Done plotting, enter a name for the generated image file\n";
 		std::cin >> name;
 		std::cout << "Saving file...\n";
-		new_image.save_jpg(name);
+		new_image->save_jpg(name);
 		std::cout << "Done! Press q to exit, or any other key to generate another plot\n";
 		std::cin >> input;
 		if(input == "q") exit(0);
-		else continue;
+		else
+		{
+			input = "";
+			continue;
+		}
 
 	}
 	
@@ -84,3 +97,4 @@ int main(){
 
 //3*z^4-7*z^3+(2/9)+z^2-z+10-34*i*z^6   										6 roots
 //100*(sin(3*arg(exp(i *  (abs(z) - arg(z))))) * exp(i *  (abs(z) - arg(z)))) 	spiral
+//z^z^sin(exp(cos(z)))															cool fractal
