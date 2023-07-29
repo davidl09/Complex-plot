@@ -21,7 +21,7 @@ enum RGB_COLOURS{
 
 class _RGBpix{
 
-    std::vector<uint8_t> vals; //red, green, blue
+    std::array<uint8_t, 3> vals; //red, green, blue
 
     public:
 
@@ -32,15 +32,16 @@ class _RGBpix{
 
         _RGBpix(uint8_t red, uint8_t green, uint8_t blue)
         {
-            vals.resize(3);
-            vals[RED] = red;
-            vals[GREEN] = green;
-            vals[BLUE] = blue;
+            vals = {red, green, blue};
         }
 
         _RGBpix(std::vector<uint8_t>& arr)
         {
-            vals = arr;
+            for(int i = 0; i < 3; ++i)
+            {
+                vals[i] = arr[i];
+            }
+            
         }
 
         _RGBpix(unsigned char arr[3])
@@ -51,14 +52,20 @@ class _RGBpix{
             }
         }
 
-        void set_val(std::vector<uint8_t>& new_vals)
+        void set_val(std::vector<uint8_t>& arr)
         {
-            vals = new_vals;
+            for(int i = 0; i < 3; ++i)
+            {
+                vals[i] = arr[i];
+            }
         }
 
-        void set_val(std::vector<uint8_t>&& new_vals)
+        void set_val(std::vector<uint8_t>&& arr)
         {
-            vals = new_vals;
+            for(int i = 0; i < 3; ++i)
+            {
+                vals[i] = arr[i];
+            }
         }
 
         void set_val(unsigned char value, RGB_COLOURS colour)
@@ -81,13 +88,10 @@ class _RGBpix{
             return vals[colour];
         }
         
-        const std::vector<uint8_t>& self_v()
+        const std::array<uint8_t, 3>& self_v()
         {
             return vals;
         }
-
-        
-    
 };
 /*
 A "magic number" for identifying the file type. A ppm image's magic number is the two characters "P6".

@@ -69,7 +69,7 @@ int main(){
 		}
 		
 		//new_image.plot_cmplx_func_sector(func, 0, new_image.get_height(), range, grid_show);
-		new_image->plot_cmplx_func_m(func, range, grid_show, 2);
+		new_image->plot_cmplx_func_m(func, range, grid_show);
 		
 		std::cout << "Done plotting, enter a name for the generated image file\n";
 		std::cin >> name;
