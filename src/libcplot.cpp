@@ -1,6 +1,8 @@
 #include "libcplot.hpp"
 #include "toojpeg.h"
 
+#include <cstring>
+
 extern "C"
 {
     BitMap::BitMap(int width, int height) : width(width), height(height)
@@ -13,6 +15,24 @@ extern "C"
         delete[] pixels;
     }
     
+    void BitMap::resize(int new_width, int new_height)
+    {
+    unsigned char* new_ptr = (unsigned char*)malloc(3 * new_width * new_height);
+
+    for(int row = 0; row < std::min(height, new_height); row++)
+    {
+        std::memcpy(new_ptr, pixels, 3 * std::min(width, new_width));
+    }
+
+    free(pixels);
+    pixels = new_ptr;
+
+    width = new_width;
+    height = new_height;
+    
+    }
+
+
     void BitMap::plot_complex_func(std::string expr, int maxval, bool grid, unsigned int nthreads)
     {
         Parsing::Expression<std::complex<double>> func(expr);

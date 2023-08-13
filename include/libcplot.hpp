@@ -54,10 +54,10 @@ struct BMPHeader {
 */
 
 
-FILE* jpeg_out;
+static FILE* jpeg_out;
 class BitMap
 {
-    const int width, height;
+    int width, height;
     unsigned char* pixels;
 
     template<typename T>
@@ -126,7 +126,7 @@ class BitMap
         }
         
         for(auto& t : threads)
-            t.join();
+            t.detach();
     }
 
     public:
@@ -134,6 +134,8 @@ class BitMap
         BitMap(int width, int height);
 
         ~BitMap();
+
+        void resize(int width, int height);
 
         void plot_complex_func(std::string expr, int maxval, bool grid, unsigned int nthreads);
 
