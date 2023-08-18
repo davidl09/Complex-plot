@@ -1,4 +1,4 @@
-include_directories(${cmplx-plot-1.0_SOURCE_DIR}/main/include)
+target_include_directories(cplot ../include)
 
 set(EXECUTABLE_OUTPUT_PATH ${cmplx-plot-1.0_SOURCE_DIR}/bin)
 
