@@ -20,6 +20,6 @@ jobs:
     - name: check
       run: dir
     - name: cmake
-      run: cmake
+      run: cmake .
     - name: make
       run: make
