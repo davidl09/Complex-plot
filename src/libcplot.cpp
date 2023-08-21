@@ -32,6 +32,20 @@ extern "C"
     
     }
 
+    unsigned char* BitMap::get_data()
+    {
+        return pixels;
+    }
+
+    int BitMap::get_width()
+    {
+        return width;
+    }
+
+    int BitMap::get_height()
+    {
+        return height;
+    }
 
     void BitMap::plot_complex_func(std::string expr, int maxval, bool grid, unsigned int nthreads)
     {

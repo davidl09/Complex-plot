@@ -100,8 +100,7 @@ class BitMap
     {
         nthreads = (int)std::min(nthreads, std::thread::hardware_concurrency()); //no more threads than available processors
         int rows_per_thread = height / nthreads; //size of each horizontal slice
-
-        std::cout << "Using " << nthreads << " threads...\n";
+        
         std::vector<std::thread> threads;
         threads.reserve(nthreads + 1); 
 
@@ -126,7 +125,7 @@ class BitMap
         }
         
         for(auto& t : threads)
-            t.detach();
+            t.join();
     }
 
     public:
@@ -136,6 +135,12 @@ class BitMap
         ~BitMap();
 
         void resize(int width, int height);
+
+        unsigned char* get_data();
+
+        int get_width();
+
+        int get_height();
 
         void plot_complex_func(std::string expr, int maxval, bool grid, unsigned int nthreads);
 
