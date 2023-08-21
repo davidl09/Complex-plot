@@ -36,7 +36,8 @@ extern "C"
         }
     
         width = new_width;
-        height = new_height;
+        height = new_height;            
+
     }
 
     void BitMap::reserve(int new_width, int new_height)
