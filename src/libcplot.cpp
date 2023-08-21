@@ -5,7 +5,7 @@
 
 extern "C"
 {
-    BitMap::BitMap(int width, int height) : width(width), height(height)
+    BitMap::BitMap(int width, int height) : width(width), height(height), _max_width(width), _max_height(height)
     {
         pixels = new unsigned char[3 * width * height];
     }
@@ -17,19 +17,47 @@ extern "C"
     
     void BitMap::resize(int new_width, int new_height)
     {
-    unsigned char* new_ptr = (unsigned char*)malloc(3 * new_width * new_height);
+        if(new_width * new_height * 3 > _max_width * _max_height * 3)
+        {
+            unsigned char* new_ptr = new unsigned char[3 * new_width * new_height];
 
-    for(int row = 0; row < std::min(height, new_height); row++)
-    {
-        std::memcpy(new_ptr, pixels, 3 * std::min(width, new_width));
+            std::memcpy(new_ptr, pixels, 3 * width * height);
+/*
+            for(int row = 0; row < std::min(height, new_height); row++)
+            {
+                std::memcpy(new_ptr, pixels, 3 * std::min(width, new_width));
+            }
+*/
+            delete[] pixels;
+            pixels = new_ptr;
+
+            _max_width = new_width;
+            _max_height = new_height;
+        }
+    
+        width = new_width;
+        height = new_height;
     }
 
-    free(pixels);
-    pixels = new_ptr;
+    void BitMap::reserve(int new_width, int new_height)
+    {
+        if(new_height * new_width * 3 > _max_width * _max_height * 3)
+        {
+            unsigned char* new_ptr = new unsigned char[3 * new_width * new_height];
 
-    width = new_width;
-    height = new_height;
-    
+            std::memcpy(new_ptr, pixels, 3 * width * height);
+/*
+            for(int row = 0; row < std::min(height, new_height); row++)
+            {
+                std::memcpy(new_ptr, pixels, 3 * std::min(width, new_width));
+            }
+*/
+            delete[] pixels;
+            pixels = new_ptr;
+
+            _max_width = new_width;
+            _max_height = new_height;
+        }
     }
 
     unsigned char* BitMap::get_data()

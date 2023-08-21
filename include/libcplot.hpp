@@ -57,7 +57,7 @@ struct BMPHeader {
 static FILE* jpeg_out;
 class BitMap
 {
-    int width, height;
+    int width, height, _max_width, _max_height;
     unsigned char* pixels;
 
     template<typename T>
@@ -135,6 +135,8 @@ class BitMap
         ~BitMap();
 
         void resize(int width, int height);
+
+        void reserve(int maxwidth, int maxheight);
 
         unsigned char* get_data();
 
