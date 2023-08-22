@@ -6,7 +6,7 @@
 #include <vector>
 #include <complex>
 
-#include "expr_parsing_cpp/parsing.hpp"
+#include "parsing.hpp"
 
 
 namespace ComplexPlot
