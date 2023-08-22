@@ -62,7 +62,7 @@ class BitMap
 
     template<typename T>
     void plot_complex_sector
-    (Parsing::Expression<std::complex<T>> expr, int start_row, int num_rows, int maxval, bool grid)
+    (Parsing::Expression<std::complex<T>> expr, int start_row, int num_rows, double maxval, bool grid)
     {
         T x, y;
         double pixel_per_int = std::min(height, width) / (2.0 * maxval);
@@ -90,22 +90,20 @@ class BitMap
 
     int at_pos_index(int row, int column)
     {
-        assert(row < height && column < width);
+        assert(row * column < _max_width * _max_height);
         return 3 * (row * width + column);
     }
 
     template<typename T>
     void plot_complex
-    (Parsing::Expression<std::complex<T>>& expr, int maxval, bool grid, unsigned int nthreads)
+    (Parsing::Expression<std::complex<T>>& expr, double maxval, bool grid, int nthreads)
     {
-        nthreads = (int)std::min(nthreads, std::thread::hardware_concurrency()); //no more threads than available processors
+        nthreads = std::min(nthreads, static_cast<int>(std::thread::hardware_concurrency())); //no more threads than available processors
         int rows_per_thread = height / nthreads; //size of each horizontal slice
         
         std::vector<std::thread> threads;
         threads.reserve(nthreads + 1); 
 
-        
-        
         for(int row = 0; row < height - height % rows_per_thread; row += rows_per_thread)
         {
             threads.push_back(
@@ -125,7 +123,7 @@ class BitMap
         }
         
         for(auto& t : threads)
-            t.join();
+            t.detach();
     }
 
     public:
@@ -144,7 +142,7 @@ class BitMap
 
         int get_height();
 
-        void plot_complex_func(std::string expr, int maxval, bool grid, unsigned int nthreads);
+        void plot_complex_func(std::string expr, double maxval, bool grid, unsigned int nthreads);
 
         void save_jpeg(std::string filename);
 };
