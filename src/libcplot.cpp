@@ -78,17 +78,10 @@ extern "C"
 
     void BitMap::plot_complex_func(std::string expr, double maxval, bool grid, unsigned int nthreads)
     {
-        try
-        {
-            Parsing::Expression<std::complex<double>> func(expr);
-            if(func.validate({{'z', 0}}))
-                BitMap::plot_complex<double>(func, maxval, grid, nthreads);
-        }
-        catch(const std::exception& e)
-        {
-            std::cerr << e.what() << '\n';
-        }
         
+        Parsing::Expression<std::complex<double>> func(expr);
+        func.validate_with_except({{'z', 0}});
+        BitMap::plot_complex<double>(func, maxval, grid, nthreads);
     }
 
     void BitMap::save_jpeg(std::string filename)//Does what it says. .jpg extension not necessary in filename

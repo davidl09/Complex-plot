@@ -25,34 +25,6 @@ namespace ComplexPlot
 
 };
 
-/*
-#pragma pack(push, 1) // Pack the struct tightly without padding
-
-struct BMPHeader {
-    // Bitmap File Header (14 bytes)
-    const char signature[2] = {'B', 'M'};  // BM (2 bytes) - Bitmap file signature
-    uint32_t fileSize;  // File size (4 bytes) - Total size of the BMP file in bytes
-    uint16_t reserved1; // Reserved (2 bytes) - Must be set to 0
-    uint16_t reserved2; // Reserved (2 bytes) - Must be set to 0
-    uint32_t dataOffset; // Data offset (4 bytes) - Offset in bytes to the start of the image data
-
-    // Bitmap Information Header (40 bytes)
-    uint32_t headerSize;      // Header size (4 bytes) - Size of this header (40 bytes)
-    int32_t  imageWidth;      // Image width (4 bytes) - Width of the image in pixels
-    int32_t  imageHeight;     // Image height (4 bytes) - Height of the image in pixels (positive for bottom-up images, negative for top-down images)
-    uint16_t planes;          // Color planes (2 bytes) - Number of color planes (must be set to 1)
-    uint16_t bitDepth;        // Bits per pixel (2 bytes) - Number of bits per pixel (e.g., 1, 4, 8, 16, 24, 32)
-    uint32_t compression;     // Compression method (4 bytes) - Compression method being used (0 for uncompressed)
-    uint32_t imageSize;       // Image size (4 bytes) - Size of the raw image data (can be set to 0 for uncompressed images)
-    int32_t  horizontalRes;   // Horizontal resolution (4 bytes) - Pixels per meter
-    int32_t  verticalRes;     // Vertical resolution (4 bytes) - Pixels per meter
-    uint32_t colorsUsed;      // Number of colors used (4 bytes) - Number of colors in the color palette (set to 0 for full-color images)
-    uint32_t importantColors; // Number of important colors (4 bytes) - Number of important colors used (set to 0 to indicate all are important)
-};
-
-#pragma pack(pop) // Restore default struct alignment
-*/
-
 
 static FILE* jpeg_out;
 class BitMap
