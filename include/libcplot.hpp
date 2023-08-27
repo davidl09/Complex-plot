@@ -47,14 +47,17 @@ class BitMap
                 x = (j - width / 2) / pixel_per_int;
                 y = (-(row + start_row) + height / 2) / pixel_per_int;
 
-                if(grid && maxval <= 50 && (std::abs(y - std::floor(y)) < 0.002 || std::abs(x - std::floor(x)) < 0.002)) 
+                if(grid && maxval <= 50 && (std::abs(y - std::floor(y)) < 0.005 || std::abs(x - std::floor(x)) < 0.005)) 
                     for(int i = 0; i < 3; ++i)
                     {
                         pixels[at_pos_index(row + start_row, j) + i] = 30;
                     }
                     
                 else 
-                    ComplexPlot::cmplx_to_colour(pixels + at_pos_index(row + start_row, j), expr.evaluate({{'z', {x, y}}}));
+                    ComplexPlot::cmplx_to_colour(pixels + at_pos_index(row + start_row, j), expr.evaluate({
+                                                                                                            {'z', {x, y}}, 
+                                                                                                            {'i', {0, 1}}
+                    }));
             }
         }
     }

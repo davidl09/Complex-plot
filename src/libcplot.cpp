@@ -34,7 +34,7 @@ extern "C"
             _max_width = new_width;
             _max_height = new_height;
         }
-    
+
         width = new_width;
         height = new_height;            
 
@@ -78,20 +78,16 @@ extern "C"
 
     void BitMap::plot_complex_func(std::string expr, double maxval, bool grid, unsigned int nthreads)
     {
-        
         Parsing::Expression<std::complex<double>> func(expr);
-        func.validate_with_except({{'z', 0}});
+        func.validate_with_except({{'z', 0}, {'i', {0, 1}}});
         BitMap::plot_complex<double>(func, maxval, grid, nthreads);
     }
 
     void BitMap::save_jpeg(std::string filename)//Does what it says. .jpg extension not necessary in filename
     {
         filename += (filename.length() > 4 && filename.substr(filename.length() - 4, 4) == ".jpg" ? "" : ".jpg");
-
         jpeg_out = fopen(filename.c_str(), "wb");
-
         TooJpeg::writeJpeg([](unsigned char byte){fputc(byte, jpeg_out);}, pixels, width, height, true, 100, false, NULL);
-
         fclose(jpeg_out);
         
     }
