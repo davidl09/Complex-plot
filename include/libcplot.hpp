@@ -21,8 +21,6 @@ namespace ComplexPlot
             pix[i] = (unsigned char)(mag*(127.5*sin(arg + (M_PI * i) / 2) + 127.5));
         }
     }
-
-
 };
 
 
