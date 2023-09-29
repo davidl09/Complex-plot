@@ -33,6 +33,7 @@ class BitMap
 {
     int width, height, _max_width, _max_height;
     unsigned char* pixels;
+    bool *kill;
 
     template<typename T>
     void plot_complex_sector
@@ -46,6 +47,9 @@ class BitMap
 
             for(int j = 0; j < width; j++)
             {
+                if (*kill)
+                    return;
+
                 x = (j - width / 2) / pixel_per_int;
                 y = (-(row + start_row) + height / 2) / pixel_per_int;
 
@@ -65,7 +69,7 @@ class BitMap
     }
 
 
-    int at_pos_index(int row, int column)
+    constexpr int at_pos_index(int row, int column) const
     {
         assert(row * column < _max_width * _max_height);
         return 3 * (row * width + column);
@@ -79,10 +83,11 @@ class BitMap
         int rows_per_thread = height / nthreads; //size of each horizontal slice
         
         std::vector<std::thread> threads;
-        threads.reserve(nthreads + 1); 
+        threads.reserve(nthreads + 1);
 
         for(int row = 0; row < height - height % rows_per_thread; row += rows_per_thread)
         {
+
             threads.push_back(
                 std::thread(
                     [=, this](){this->plot_complex_sector(expr, row, rows_per_thread, maxval, grid);}
@@ -115,11 +120,11 @@ class BitMap
 
         unsigned char* get_data();
 
-        int get_width();
+        int get_width() const;
 
-        int get_height();
+        int get_height() const;
 
-        void plot_complex_func(std::string expr, double maxval, bool grid, unsigned int nthreads);
+        void plot_complex_func(std::string&& expr, double maxval, bool grid, int nthreads);
 
         void save_jpeg(std::string filename);
 };

@@ -5,29 +5,26 @@
 
 extern "C"
 {
-    BitMap::BitMap(int width, int height) : width(width), height(height), _max_width(width), _max_height(height)
+    BitMap::BitMap(int width, int height) : width(width), height(height), _max_width(width), _max_height(height), kill(new bool)
     {
         pixels = new unsigned char[3 * width * height];
+        *kill = false;
     }
 
     BitMap::~BitMap()
     {
         delete[] pixels;
+        delete kill;
     }
     
     void BitMap::resize(int new_width, int new_height)
     {
         if(new_width * new_height * 3 > _max_width * _max_height * 3)
         {
-            unsigned char* new_ptr = new unsigned char[3 * new_width * new_height];
+            auto new_ptr = new unsigned char[3 * new_width * new_height];
 
             std::memcpy(new_ptr, pixels, 3 * width * height);
-/*
-            for(int row = 0; row < std::min(height, new_height); row++)
-            {
-                std::memcpy(new_ptr, pixels, 3 * std::min(width, new_width));
-            }
-*/
+
             delete[] pixels;
             pixels = new_ptr;
 
@@ -44,7 +41,7 @@ extern "C"
     {
         if(new_height * new_width * 3 > _max_width * _max_height * 3)
         {
-            unsigned char* new_ptr = new unsigned char[3 * new_width * new_height];
+            auto new_ptr = new unsigned char[3 * new_width * new_height];
 
             std::memcpy(new_ptr, pixels, 3 * width * height);
 /*
@@ -66,17 +63,17 @@ extern "C"
         return pixels;
     }
 
-    int BitMap::get_width()
+    int BitMap::get_width() const
     {
         return width;
     }
 
-    int BitMap::get_height()
+    int BitMap::get_height() const
     {
         return height;
     }
 
-    void BitMap::plot_complex_func(std::string expr, double maxval, bool grid, unsigned int nthreads)
+    void BitMap::plot_complex_func(std::string&& expr, double maxval, bool grid, int nthreads)
     {
         Parsing::Expression<std::complex<double>> func(expr);
         func.validate_with_except({{'z', 0}, {'i', {0, 1}}});
