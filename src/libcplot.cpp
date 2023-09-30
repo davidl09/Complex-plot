@@ -76,7 +76,7 @@ extern "C"
     void BitMap::plot_complex_func(std::string&& expr, double maxval, bool grid, int nthreads)
     {
         Parsing::Expression<std::complex<double>> func(expr);
-        func.validate_with_except({{'z', 0}, {'i', {0, 1}}});
+        //func.validate_with_except({{'z', {0,0}}, {'i', {0, 1}}});
         BitMap::plot_complex<double>(func, maxval, grid, nthreads);
     }
 

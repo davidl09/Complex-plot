@@ -69,9 +69,8 @@ class BitMap
     }
 
 
-    constexpr int at_pos_index(int row, int column) const
+    [[nodiscard]] constexpr int at_pos_index(int row, int column) const
     {
-        assert(row * column < _max_width * _max_height);
         return 3 * (row * width + column);
     }
 
