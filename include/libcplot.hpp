@@ -6,7 +6,7 @@
 #include <vector>
 #include <complex>
 #include <mutex>
-
+#define M_PI 3.1415926535
 #include "parsing.hpp"
 
 
