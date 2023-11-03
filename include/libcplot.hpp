@@ -6,6 +6,7 @@
 #include <vector>
 #include <complex>
 #include <mutex>
+#include <numbers>
 
 #include "expression.h"
 
@@ -21,7 +22,7 @@ namespace ComplexPlot
         m.lock();
         for(int i = 0; i < 3; ++i)
         {
-            pix[i] = (unsigned char)(mag*(127.5*sin(arg + (M_PI * i) / 2) + 127.5));
+            pix[i] = (unsigned char)(mag*(127.5*sin(arg + (std::numbers::pi * i) / 2) + 127.5));
         }
         m.unlock();
     }
