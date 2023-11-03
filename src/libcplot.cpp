@@ -73,12 +73,12 @@ extern "C"
         return height;
     }
 
-    void BitMap::plot_complex_func(std::string&& expr, double maxval, bool grid, int nthreads)
-    {
-        Parsing::Expression<std::complex<double>> func(expr);
-        //func.validate_with_except({{'z', {0,0}}, {'i', {0, 1}}});
-        BitMap::plot_complex<double>(func, maxval, grid, nthreads);
-    }
+    // void BitMap::plot_complex_func(std::string&& expr, double maxval, bool grid, int nthreads)
+    // {
+    //     Expression<std::complex<double>> func(expr);
+    //     //func.validate_with_except({{'z', {0,0}}, {'i', {0, 1}}});
+    //     BitMap::plot_complex<double>(func, maxval, grid, nthreads);
+    // }
 
     void BitMap::save_jpeg(std::string filename)//Does what it says. .jpg extension not necessary in filename
     {

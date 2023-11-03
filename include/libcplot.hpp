@@ -7,7 +7,7 @@
 #include <complex>
 #include <mutex>
 
-#include "parsing.hpp"
+#include "expression.h"
 
 
 namespace ComplexPlot
@@ -37,7 +37,7 @@ class BitMap
 
     template<typename T>
     void plot_complex_sector
-    (Parsing::Expression<std::complex<T>> expr, int start_row, int num_rows, double maxval, bool grid)
+    (const Expression<std::complex<T>>& expr, int start_row, int num_rows, double maxval, bool grid)
     {
         T x, y;
         double pixel_per_int = std::min(height, width) / (2.0 * maxval);
@@ -61,8 +61,11 @@ class BitMap
                     
                 else 
                     ComplexPlot::cmplx_to_colour(pixels + at_pos_index(row + start_row, j), expr.evaluate({
-                                                                                                            {'z', {x, y}}, 
-                                                                                                            {'i', {0, 1}}
+                                                                                                            {"z", {x, y}}, 
+                                                                                                            {"i", {0, 1}},
+                                                                                                            {"e", {std::numbers::e, 0}},
+                                                                                                            {"pi", {std::numbers::pi}}
+                                                                                                    
                     }));
             }
         }
@@ -74,9 +77,11 @@ class BitMap
         return 3 * (row * width + column);
     }
 
+public:
+
     template<typename T>
     void plot_complex
-    (Parsing::Expression<std::complex<T>>& expr, double maxval, bool grid, int nthreads)
+    (Expression<std::complex<T>>& expr, double maxval, bool grid, int nthreads)
     {
         nthreads = std::min(nthreads, static_cast<int>(std::thread::hardware_concurrency())); //no more threads than available processors
         int rows_per_thread = height / nthreads; //size of each horizontal slice
@@ -107,7 +112,6 @@ class BitMap
             t.detach();
     }
 
-    public:
 
         BitMap(int width, int height);
 
