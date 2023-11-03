@@ -50,10 +50,10 @@ class BitMap
                 if (*kill)
                     return;
 
-                x = (j - width / 2) / pixel_per_int;
-                y = (-(row + start_row) + height / 2) / pixel_per_int;
+                x = (j - width / 2.0) / pixel_per_int;
+                y = (-(row + start_row) + height / 2.0) / pixel_per_int;
 
-                if(grid && maxval <= 50 && (std::abs(y - std::floor(y)) < 0.005 || std::abs(x - std::floor(x)) < 0.005)) 
+                if(grid && (std::abs(y - std::floor(y)) < 0.005 || std::abs(x - std::floor(x)) < 0.005))
                     for(int i = 0; i < 3; ++i)
                     {
                         pixels[at_pos_index(row + start_row, j) + i] = 30;
