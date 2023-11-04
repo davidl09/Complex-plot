@@ -1,6 +1,3 @@
-[submodule "main/include/expr_parsing_cpp"]
-	path = main/include/expr_parsing_cpp
-	url = https://github.com/davidl09/expr_parsing_cpp
 [submodule "include/astParser"]
 	path = include/astParser
 	url = https://github.com/davidl09/astParser
