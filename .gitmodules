@@ -6,4 +6,4 @@
 	url = https://github.com/davidl09/expr_parsing_cpp
 [submodule "include/astParser"]
 	path = include/astParser
-	url = git@github.com:davidl09/astParser
+	url = https://github.com/davidl09/astParser
